@@ -3,13 +3,13 @@ const {User} = require('./classes/User');
 // # Command
 
 module.exports = {
-    name: 'verify',
-    description: 'Verify your Hypixel  profile with Discord',
+    name: 'update',
+    description: 'Update your Hypixel profile on Discord',
     async execute(message, args, data) {
         // ? No username is given
         if (args.length === 0) {
             errorMessage(message, {
-                title: 'Verification failed. You must specify your username',
+                title: 'Updating failed. You must specify your username',
                 description: 'Please specify your Minecraft username (-!verify "your username goes here")',
                 fields: [
                     {
@@ -73,7 +73,7 @@ module.exports = {
 
         // $ On complete
         successMessage(message, {
-            title: 'Verification complete!',
+            title: 'Updating complete!',
             description: `You're now verified, you can update your stats by running \`${data.config.prefix}update ign\``,
         });
     },
