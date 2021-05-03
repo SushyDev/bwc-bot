@@ -4,7 +4,7 @@ const {User} = require('./classes/User');
 
 module.exports = {
     name: 'update',
-    description: 'Update your Hypixel profile on Discord',
+    description: 'Updates your FKDR and Prestige roles on Discord',
     async execute(message, args, data) {
         // ? No username is given
         if (args.length === 0) {
@@ -40,9 +40,7 @@ module.exports = {
 
         const toRemove = user.getRoles(['prestige', 'fkdr']);
 
-        console.log(toRemove);
-
-        /// ? Remove roles
+        // ? Remove roles
         try {
             await user.removeRoles(toRemove);
         } catch (error) {

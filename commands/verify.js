@@ -4,7 +4,7 @@ const {User} = require('./classes/User');
 
 module.exports = {
     name: 'verify',
-    description: 'Verify your Hypixel  profile with Discord',
+    description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
     async execute(message, args, data) {
         // ? No username is given
         if (args.length === 0) {
@@ -40,9 +40,7 @@ module.exports = {
 
         const toRemove = user.getRoles(['prestige', 'fkdr']);
 
-        console.log(toRemove);
-
-        /// ? Remove roles
+        // ? Remove roles
         try {
             await user.removeRoles(toRemove);
         } catch (error) {
@@ -56,7 +54,6 @@ module.exports = {
         try {
             await user.addRoles([prestige, fkdr]);
         } catch (error) {
-            console.log(error);
             errorMessage(message, error);
         }
 

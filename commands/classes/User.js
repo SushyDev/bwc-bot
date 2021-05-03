@@ -79,12 +79,12 @@ exports.User = class {
                 return {name, id};
             }
             if (userFKDR >= 20) {
-                const name = `${Math.floor(Math.floor(userFKDR * 10) / 50) * 5} FKDR`;
+                const name = `${Math.floor(Math.floor(userFKDR * 10) / 50) * 5}+ FKDR`;
                 const id = list[name];
                 return {name, id};
             }
             if (userFKDR >= 10) {
-                const name = `${Math.floor(Math.floor(userFKDR * 10) / 20) * 2} FKDR`;
+                const name = `${Math.floor(Math.floor(userFKDR * 10) / 20) * 2}+ FKDR`;
                 const id = list[name];
                 return {name, id};
             }
@@ -116,6 +116,8 @@ exports.User = class {
                 description: 'Make sure you have linked your Discord and Minecraft account on the Hypixel website',
             };
         }
+
+        console.log(player.socialMedia?.links?.DISCORD, this.message.author.tag);
 
         // ? Incorrect discord
         if (player.socialMedia?.links?.DISCORD !== this.message.author.tag) {

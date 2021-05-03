@@ -61,8 +61,6 @@ function runCommand(message) {
 
     console.log(`[Handler] Recieved ${command} ${messageArgs.length === 0 ? 'without arguements' : 'command with arguements:'} ${messageArgs}`);
 
-    message.delete();
-
     // ? Execute command
     client.commands.get(command).execute(message, messageArgs, {client, config});
 }
