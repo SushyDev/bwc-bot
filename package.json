@@ -4,7 +4,8 @@
   "description": "Management bot for the Bedwars Community Discord server",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon ."
+    "start": "nodemon .",
+    "production": "node ."
   },
   "author": "Blockplacer12345#0865",
   "license": "GPL-3.0",
