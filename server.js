@@ -12,7 +12,6 @@ client.on('ready', () => {
     client.channels.cache.get('830484766171332639').send(`\`Client ready @ ${new Date().toUTCString()}\``);
     initializeCommands();
     updatePresence();
-    checkForBump();
     setTimeout(() => checkForBump(), 300000);
 });
 
