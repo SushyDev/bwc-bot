@@ -56,6 +56,7 @@ module.exports = {
         try {
             await user.addRoles([prestige, fkdr]);
         } catch (error) {
+            console.log(error);
             errorMessage(message, error);
         }
 
@@ -80,6 +81,10 @@ module.exports = {
 };
 
 function errorMessage(message, error) {
+    if (!error.title) {
+        console.error(error);
+        return;
+    }
     const embed = {
         title: error.title,
         description: error.description,
@@ -96,6 +101,10 @@ function errorMessage(message, error) {
 }
 
 function successMessage(message, content) {
+    if (!content.title) {
+        console.error(content);
+        return;
+    }
     const embed = {
         title: content.title,
         description: content.description,

@@ -217,7 +217,7 @@ exports.User = class {
             } catch (error) {
                 throw {
                     title: 'Failed to add role',
-                    description: `To get your role please run \`${data.config.prefix}update ign\` after a few minutes`,
+                    description: `To get your role please run \`${this.data.config.prefix}update ign\` after a few minutes`,
                     fields: [
                         {
                             name: 'Role',
