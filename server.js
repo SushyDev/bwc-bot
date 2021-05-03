@@ -12,6 +12,8 @@ client.on('ready', () => {
     client.channels.cache.get('830484766171332639').send(`\`Client ready @ ${new Date().toUTCString()}\``);
     initializeCommands();
     updatePresence();
+    checkForBump();
+    setTimeout(() => checkForBump(), 300000);
 });
 
 // ! On message event
@@ -21,10 +23,36 @@ client.on('message', async (message) => {
 
     if (message.author.id === '302050872383242240') {
         client.channels.cache.get('830484766171332639').send('Server was bumped. You will recieve a notification in two hours.');
-        // ? 2hrs 5 minutes
-        setTimeout(() => client.channels.cache.get('830484766171332639').send('@here Server can be bumped again!'), 7500000);
     }
 });
+
+// ! Update bot appearance based on config
+function updatePresence() {
+    if (client.user.avatarURL() !== config.avatar) client.user.setAvatar(config.avatar).catch((err) => {});
+    if (client.user.username !== config.name) client.user.setUsername(config.name).catch((err) => {});
+    client.user.setPresence(config.presense);
+}
+
+// ! Check if bump is ready
+function checkForBump() {
+    const guild = client.guilds.cache.get('745265383308656681');
+    const channel = guild.channels.cache.get('779025946317553755');
+
+    channel.messages
+        .fetch({limit: 20})
+        .catch((error) => console.error(error))
+        .then((messages) => {
+            const found = messages.find((message) => {
+                if (!message.author.id !== '302050872383242240' && message.embeds[0]?.description.includes('Bump done') && message?.createdTimestamp) return message;
+            });
+
+            const last = new Date(found.createdTimestamp);
+            const ready = new Date(last.setHours(last.getHours() + 2)).getTime();
+            const now = new Date().getTime();
+
+            if (now > ready) client.channels.cache.get('830484766171332639').send('@here Server can be bumped again!');
+        });
+}
 
 // ! Initializes all commands
 function initializeCommands() {
@@ -36,12 +64,6 @@ function initializeCommands() {
         client.commands.set(command.name, command);
     }
     console.log('[Initializer] Initialized commands');
-}
-
-function updatePresence() {
-    if (client.user.avatarURL() !== config.avatar) client.user.setAvatar(config.avatar).catch((err) => {});
-    if (client.user.username !== config.name) client.user.setUsername(config.name).catch((err) => {});
-    client.user.setPresence(config.presense);
 }
 
 // ! Runs the command according to what is typed
