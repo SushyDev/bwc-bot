@@ -12,6 +12,7 @@ client.on('ready', () => {
     client.channels.cache.get('830484766171332639').send(`\`Client ready @ ${new Date().toUTCString()}\``);
     initializeCommands();
     updatePresence();
+    checkForBump();
     setTimeout(() => checkForBump(), 300000);
 });
 
@@ -45,10 +46,8 @@ function checkForBump() {
                 if (!message.author.id !== '302050872383242240' && message.embeds[0]?.description.includes('Bump done') && message?.createdTimestamp) return message;
             });
 
-            const last = new Date(found.createdTimestamp);
-            const ready = new Date(last.setHours(last.getHours() + 2)).getTime();
+            const ready = found.createdTimestamp + 7200000;
             const now = new Date().getTime();
-
             if (now > ready) client.channels.cache.get('830484766171332639').send('@here Server can be bumped again!');
         });
 }
