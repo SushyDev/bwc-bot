@@ -34,7 +34,7 @@ module.exports = {
 
         const fetchHypixel = async (UUID) => {
             try {
-                await user.fetchHypixel(UUID);
+                return await user.fetchHypixel(UUID);
             } catch (error) {
                 errorMessage(message, error);
             }

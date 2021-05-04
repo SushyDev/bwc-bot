@@ -24,9 +24,6 @@ module.exports = {
         // ? Instanciate user
         const user = new User(message, args, data, this);
 
-        // ? Instanciate user
-        const user = new User(message, args, data, this);
-
         const fetchMojang = async (username) => {
             try {
                 return await user.fetchMojang(username);
@@ -37,7 +34,7 @@ module.exports = {
 
         const fetchHypixel = async (UUID) => {
             try {
-                await user.fetchHypixel(UUID);
+                return await user.fetchHypixel(UUID);
             } catch (error) {
                 errorMessage(message, error);
             }
