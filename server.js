@@ -10,9 +10,9 @@ const config = require('./files/config.json');
 client.on('ready', () => {
     console.log('[Client] Ready');
     client.channels.cache.get('830484766171332639').send(`\`Client ready @ ${new Date().toUTCString()}\``);
+    client.user.setPresence(config.presense);
+
     initializeCommands();
-    updatePresence();
-    checkForBump();
     setTimeout(() => checkForBump(), 300000);
 });
 
@@ -25,13 +25,6 @@ client.on('message', async (message) => {
         client.channels.cache.get('830484766171332639').send('Server was bumped. You will recieve a notification in two hours.');
     }
 });
-
-// ! Update bot appearance based on config
-function updatePresence() {
-    if (client.user.avatarURL() !== config.avatar) client.user.setAvatar(config.avatar).catch((err) => {});
-    if (client.user.username !== config.name) client.user.setUsername(config.name).catch((err) => {});
-    client.user.setPresence(config.presense);
-}
 
 // ! Check if bump is ready
 function checkForBump() {
