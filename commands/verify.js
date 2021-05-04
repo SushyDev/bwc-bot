@@ -4,31 +4,24 @@ const {User} = require('./classes/User');
 
 module.exports = {
     name: 'verify',
+    aliases: ['update'],
     description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
     async execute(message, args, data) {
-        // ? No username is given
-        if (args.length === 0) {
-            errorMessage(message, {
-                title: 'Verification failed. You must specify your username',
-                description: 'Please specify your Minecraft username (-!verify "your username goes here")',
-                fields: [
-                    {
-                        name: 'Usage:',
-                        value: `${data.config.prefix}${this.name} ign`,
-                    },
-                ],
-            });
-            return;
-        }
-
-        // ? Instanciate user
-        const user = new User(message, args, data, this);
+        const getUser = (message, args, data, command) => {
+            try {
+                return new User(message, args, data, command);
+            } catch (error) {
+                errorMessage(message, error);
+                return;
+            }
+        };
 
         const fetchMojang = async (username) => {
             try {
                 return await user.fetchMojang(username);
             } catch (error) {
                 errorMessage(message, error);
+                return;
             }
         };
 
@@ -37,12 +30,20 @@ module.exports = {
                 return await user.fetchHypixel(UUID);
             } catch (error) {
                 errorMessage(message, error);
+                return;
             }
         };
 
+        // ? Instanciate user
+        const user = getUser(message, args, data, this);
+        if (!user) return;
+
         // ? Fetch Api data
         const mojangData = await fetchMojang(args[0]);
+        if (!mojangData) return;
+
         const hypixelData = await fetchHypixel(mojangData.id);
+        if (!hypixelData) return;
 
         const player = hypixelData.player;
         const member = message.member;
@@ -88,7 +89,7 @@ module.exports = {
         // $ On complete
         successMessage(message, {
             title: 'Verification complete!',
-            description: `You're now verified, you can update your stats by running \`${data.config.prefix}update ign\``,
+            description: `You're now verified, you can update your stats by running \n\`${data.config.prefix}update ign\``,
         });
     },
 };

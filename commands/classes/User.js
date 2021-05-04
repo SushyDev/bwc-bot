@@ -1,7 +1,22 @@
 exports.User = class {
     constructor(message, args, data, command) {
+        // ? If no username is given
+        if (args.length === 0) {
+            throw {
+                title: 'Verification failed. You must specify your username',
+                description: 'Please specify your Minecraft username',
+                fields: [
+                    {
+                        name: 'Usage:',
+                        value: `${data.config.prefix}${command.name} ign`,
+                    },
+                ],
+            };
+        }
+
         this.message = message;
         this.member = message.member;
+        this.player = args[0];
         this.data = data;
         this.args = args;
         this.command = command;

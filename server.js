@@ -47,7 +47,6 @@ function checkForBump() {
 
 // ! Initializes all commands
 function initializeCommands() {
-    console.log('[Initializer] Initializing commands');
     client.commands = new Discord.Collection();
     const commands = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
     for (const file of commands) {
@@ -62,20 +61,21 @@ function runCommand(message) {
     // ? Format message and split
     const commandMessage = message.content.slice(config.prefix.length).toLowerCase().split(' ');
     // ? First split is actual command
-    const command = commandMessage[0];
+    const commandName = commandMessage[0];
+    // ? Get command
+    const command = client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+
     // ? Arguements array is created
     let messageArgs = [];
 
-    // * If there is arguements then add all to the messageArgs array
+    // ? If there is arguements then add all to the messageArgs array
     if (commandMessage.length > 1) for (let arg = 1; arg < commandMessage.length; arg++) messageArgs.push(commandMessage[arg]);
 
-    // ! Block if invalid
-    if (message.author.bot || !client.commands.has(command)) return;
+    // ? Block if invalid
+    if (message.author.bot || !command) return;
 
-    console.log(`[Handler] Recieved ${command} ${messageArgs.length === 0 ? 'without arguements' : 'command with arguements:'} ${messageArgs}`);
-
-    // ? Execute command
-    client.commands.get(command).execute(message, messageArgs, {client, config});
+    console.log(`[Handler] Recieved ${commandName} ${messageArgs.length === 0 ? 'without arguements' : 'command with arguements:'} ${messageArgs}`);
+    command.execute(message, messageArgs, {client, config});
 }
 
 // ! Login to the BOT
