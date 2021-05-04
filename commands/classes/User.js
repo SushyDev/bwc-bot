@@ -138,13 +138,12 @@ exports.User = class {
 
     fetchMojang = async (username) => {
         const fetch = require('node-fetch');
-        const message = this.message;
 
         try {
             const mojangApi = await fetch(`http://api.mojang.com/users/profiles/minecraft/${username}`);
             return await mojangApi.json();
         } catch (error) {
-            errorMessage(message, {
+            throw {
                 title: 'Mojang API Request failed',
                 description: 'Please ask one of the developers for help',
                 fields: [
@@ -153,13 +152,12 @@ exports.User = class {
                         value: error || 'Unknown',
                     },
                 ],
-            });
+            };
         }
     };
 
     fetchHypixel = async (uuid) => {
         const fetch = require('node-fetch');
-        const message = this.message;
 
         try {
             const hypixelApi = await fetch(`http://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&uuid=${uuid}`);
@@ -167,7 +165,7 @@ exports.User = class {
             if (!hypixelData.success) throw hypixelData.cause;
             return hypixelData;
         } catch (error) {
-            errorMessage(message, {
+            throw {
                 title: 'Hypixel API Request failed',
                 description: 'Please ask one of the developers for help',
                 fields: [
@@ -176,7 +174,7 @@ exports.User = class {
                         value: error || 'Unknown',
                     },
                 ],
-            });
+            };
         }
     };
 

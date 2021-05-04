@@ -1,0 +1,12 @@
+{
+    "name": "Bedwars Community",
+    "avatar": "https://cdn.discordapp.com/avatars/780373168023142440/fe2de2d7d88507cbb75ddc86a91088d6.png",
+    "presense": {
+        "status": "online",
+        "activity": {
+            "name": "over you",
+            "type": "WATCHING"
+        }
+    },
+    "prefix": "--!"
+}

@@ -24,9 +24,25 @@ module.exports = {
         // ? Instanciate user
         const user = new User(message, args, data, this);
 
+        const fetchMojang = async (username) => {
+            try {
+                return await user.fetchMojang(username);
+            } catch (error) {
+                errorMessage(message, error);
+            }
+        };
+
+        const fetchHypixel = async (UUID) => {
+            try {
+                return await user.fetchHypixel(UUID);
+            } catch (error) {
+                errorMessage(message, error);
+            }
+        };
+
         // ? Fetch Api data
-        const mojangData = await user.fetchMojang(args[0]);
-        const hypixelData = await user.fetchHypixel(mojangData.id);
+        const mojangData = await fetchMojang(args[0]);
+        const hypixelData = await fetchHypixel(mojangData.id);
 
         const player = hypixelData.player;
         const member = message.member;
