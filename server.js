@@ -13,7 +13,7 @@ client.on('ready', () => {
     client.user.setPresence(config.presense);
 
     initializeCommands();
-    setTimeout(() => checkForBump(), 300000);
+    setInterval(() => checkForBump(), 300000);
 });
 
 // ! On message event
