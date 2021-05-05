@@ -7,6 +7,8 @@ module.exports = {
     aliases: ['update'],
     description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
     async execute(message, args, data) {
+        const usedAlias = message.content.slice(data.config.prefix.length).toLowerCase().split(' ')[0];
+
         const getUser = (message, args, data, command) => {
             try {
                 return new User(message, args, data, command);
@@ -87,19 +89,17 @@ module.exports = {
         }
 
         // $ On complete
+
         successMessage(message, {
-            title: 'Verification complete!',
-            description: `You're now verified, you can update your stats by running \n\`${data.config.prefix}update ign\``,
+            title: `${usedAlias === 'verify' ? 'Verification' : 'Updating'} complete!`,
+            description: `You can update your stats by running \n\`${data.config.prefix}update ign\``,
         });
     },
 };
 
 function errorMessage(message, error) {
-    if (!error.title) {
-        console.error(error);
-        return;
-    }
-    const embed = {
+    if (!content.title) throw new Error(content);
+    message.channel.send({
         title: error.title,
         description: error.description,
         color: error.color ?? '#ff0000',
@@ -110,16 +110,12 @@ function errorMessage(message, error) {
         footer: {
             text: error.footer ?? `For ${message.member.user.tag}`,
         },
-    };
-    message.channel.send({embed});
+    });
 }
 
 function successMessage(message, content) {
-    if (!content.title) {
-        console.error(content);
-        return;
-    }
-    const embed = {
+    if (!content.title) throw new Error(content);
+    message.channel.send({
         title: content.title,
         description: content.description,
         color: content.color ?? '#00ff00',
@@ -130,6 +126,5 @@ function successMessage(message, content) {
         footer: {
             text: content.footer ?? `For ${message.member.user.tag}`,
         },
-    };
-    message.channel.send({embed});
+    });
 }

@@ -160,7 +160,7 @@ exports.User = class {
         } catch (error) {
             throw {
                 title: 'Mojang API Request failed',
-                description: 'Please ask one of the developers for help',
+                description: "Mostlikely your username doesn't exist, check the spelling and make sure its a premium account \nIf this isn't the case please report to one of the devs with the `Cause`",
                 fields: [
                     {
                         name: 'Cause',
@@ -182,7 +182,7 @@ exports.User = class {
         } catch (error) {
             throw {
                 title: 'Hypixel API Request failed',
-                description: 'Please ask one of the developers for help',
+                description: 'Please report to one of the devs with the `Cause`',
                 fields: [
                     {
                         name: 'Cause',
