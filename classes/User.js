@@ -8,7 +8,7 @@ exports.User = class {
     }
 
     getRoles = (types) => {
-        if (!types) throw new Error('No role types arguement defined');
+        if (!types) throw 'No role types arguement defined';
 
         const ranks = require('../files/ranks.json');
         const member = this.member;
@@ -40,7 +40,7 @@ exports.User = class {
     };
 
     getPrestige = (player) => {
-        if (!player) throw new Error('prestigeMatching requires a player arguement');
+        if (!player) throw 'prestigeMatching requires a player arguement';
 
         const ranks = require('../files/ranks.json');
         const list = ranks['prestige'];
@@ -111,28 +111,28 @@ exports.User = class {
     valid = (player) => {
         // ? Unlinked account
         if (!player.socialMedia?.links?.DISCORD) {
-            throw new Error({
+            throw {
                 title: "This account isn't yet linked to a Discord account",
                 description: 'Make sure you have linked your Discord and Minecraft account on the Hypixel website',
-            });
+            };
         }
 
         console.log(player.socialMedia?.links?.DISCORD, this.message.author.tag);
 
         // ? Incorrect discord
         if (player.socialMedia?.links?.DISCORD !== this.message.author.tag) {
-            throw new Error({
+            throw {
                 title: 'The Discord account was incorrect',
                 description: 'The Discord account linked on the Hypixel website is different from yours',
-            });
+            };
         }
 
         // ? If no bedwars level was found
         if (!player.achievements.bedwars_level) {
-            throw new Error({
+            throw {
                 title: "We couldn't find any Bedwars stats for this account",
                 description: 'Make sure you at least are level 1 in Bedwars on the Hypixel server',
-            });
+            };
         }
     };
 
@@ -143,7 +143,7 @@ exports.User = class {
             const mojangApi = await fetch(`http://api.mojang.com/users/profiles/minecraft/${username}`);
             return await mojangApi.json();
         } catch (error) {
-            throw new Error({
+            throw {
                 title: 'Mojang API Request failed',
                 description: "Mostlikely your username doesn't exist, check the spelling and make sure its a premium account \nIf this isn't the case please report to one of the devs with the `Cause`",
                 fields: [
@@ -152,7 +152,7 @@ exports.User = class {
                         value: error || 'Unknown',
                     },
                 ],
-            });
+            };
         }
     };
 
@@ -162,10 +162,10 @@ exports.User = class {
         try {
             const hypixelApi = await fetch(`http://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&uuid=${uuid}`);
             const hypixelData = await hypixelApi.json();
-            if (!hypixelData.success) throw new Error(hypixelData.cause);
+            if (!hypixelData.success) throwhypixelData.cause;
             return hypixelData;
         } catch (error) {
-            throw new Error({
+            throw {
                 title: 'Hypixel API Request failed',
                 description: 'Please report to one of the devs with the `Cause`',
                 fields: [
@@ -174,7 +174,7 @@ exports.User = class {
                         value: error || 'Unknown',
                     },
                 ],
-            });
+            };
         }
     };
 
@@ -187,7 +187,7 @@ exports.User = class {
                 await member.roles.remove(role.id);
                 console.log(`Removed ${role.name} from ${member.id} | ${member.user.tag}`);
             } catch (error) {
-                throw new Error({
+                throw {
                     title: `To remove your old role please run \`${this.data.config.prefix}update ign\` after a few minutes`,
                     description: role.name,
                     fields: [
@@ -200,7 +200,7 @@ exports.User = class {
                             value: error.code,
                         },
                     ],
-                });
+                };
             }
         }
         return;
@@ -215,7 +215,7 @@ exports.User = class {
                 await member.roles.add(role.id);
                 console.log(`Added ${role.name} to ${member.id} | ${member.user.tag}`);
             } catch (error) {
-                throw new Error({
+                throw {
                     title: 'Failed to add role',
                     description: `To get your role please run \`${this.data.config.prefix}update ign\` after a few minutes`,
                     fields: [
@@ -232,7 +232,7 @@ exports.User = class {
                             value: error.code,
                         },
                     ],
-                });
+                };
             }
         }
         return;
@@ -244,7 +244,7 @@ exports.User = class {
             await member.setNickname(nickname);
             console.log(`Set nickname ${nickname} to ${member.id} | ${member.user.tag}`);
         } catch (error) {
-            throw new Error({
+            throw {
                 title: 'Failed to set nickname',
                 description: `To get your nickname please run \`${this.data.config.prefix}update ign\` after a few minutes`,
                 fields: [
@@ -261,7 +261,7 @@ exports.User = class {
                         value: error.code,
                     },
                 ],
-            });
+            };
         }
     };
 };

@@ -1,13 +1,14 @@
 const {User} = require('../classes/User');
 module.exports = {
     name: 'verify',
+    aliases: ['update'],
     description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
     async execute(message, args, config, Bot) {
         const usedAlias = message.content.slice(config.prefix.length).toLowerCase().split(' ')[0];
 
         // ? If no username is given
         if (args.length === 0) {
-            throw new Error({
+            Bot.errorMessage(message, {
                 title: 'Verification failed. You must specify your username',
                 description: 'Please specify your Minecraft username',
                 fields: [
@@ -17,6 +18,7 @@ module.exports = {
                     },
                 ],
             });
+            return;
         }
 
         const getUser = (message, args, config, command) => {
@@ -24,7 +26,7 @@ module.exports = {
                 return new User(message, args, config, command);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw new Error(error);
+                throw error;
             }
         };
 
@@ -33,7 +35,7 @@ module.exports = {
                 return await user.fetchMojang(username);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw new Error(error);
+                throw error;
             }
         };
 
@@ -42,7 +44,7 @@ module.exports = {
                 return await user.fetchHypixel(UUID);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw new Error(error);
+                throw error;
             }
         };
 
@@ -61,7 +63,7 @@ module.exports = {
             await user.valid(player);
         } catch (error) {
             Bot.errorMessage(message, error);
-            throw new Error(error);
+            throw error;
         }
 
         // ? Remove roles
