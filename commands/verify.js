@@ -1,20 +1,30 @@
-const {User} = require('./classes/User');
-
-// # Command
-
+const {User} = require('../classes/User');
 module.exports = {
     name: 'verify',
-    aliases: ['update'],
     description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
-    async execute(message, args, data) {
-        const usedAlias = message.content.slice(data.config.prefix.length).toLowerCase().split(' ')[0];
+    async execute(message, args, config, Bot) {
+        const usedAlias = message.content.slice(config.prefix.length).toLowerCase().split(' ')[0];
 
-        const getUser = (message, args, data, command) => {
+        // ? If no username is given
+        if (args.length === 0) {
+            throw new Error({
+                title: 'Verification failed. You must specify your username',
+                description: 'Please specify your Minecraft username',
+                fields: [
+                    {
+                        name: 'Usage:',
+                        value: `${config.prefix}${usedAlias} ign`,
+                    },
+                ],
+            });
+        }
+
+        const getUser = (message, args, config, command) => {
             try {
-                return new User(message, args, data, command);
+                return new User(message, args, config, command);
             } catch (error) {
-                errorMessage(message, error);
-                return;
+                Bot.errorMessage(message, error);
+                throw new Error(error);
             }
         };
 
@@ -22,8 +32,8 @@ module.exports = {
             try {
                 return await user.fetchMojang(username);
             } catch (error) {
-                errorMessage(message, error);
-                return;
+                Bot.errorMessage(message, error);
+                throw new Error(error);
             }
         };
 
@@ -31,21 +41,18 @@ module.exports = {
             try {
                 return await user.fetchHypixel(UUID);
             } catch (error) {
-                errorMessage(message, error);
-                return;
+                Bot.errorMessage(message, error);
+                throw new Error(error);
             }
         };
 
         // ? Instanciate user
-        const user = getUser(message, args, data, this);
-        if (!user) return;
+        const user = getUser(message, args, config, this);
 
         // ? Fetch Api data
         const mojangData = await fetchMojang(args[0]);
-        if (!mojangData) return;
 
         const hypixelData = await fetchHypixel(mojangData.id);
-        if (!hypixelData) return;
 
         const player = hypixelData.player;
         const member = message.member;
@@ -53,78 +60,41 @@ module.exports = {
         try {
             await user.valid(player);
         } catch (error) {
-            errorMessage(message, error);
-            return;
+            Bot.errorMessage(message, error);
+            throw new Error(error);
         }
-
-        const toRemove = user.getRoles(['prestige', 'fkdr']);
 
         // ? Remove roles
         try {
+            const toRemove = user.getRoles(['prestige', 'fkdr']);
             await user.removeRoles(toRemove);
         } catch (error) {
-            errorMessage(message, error);
+            Bot.errorMessage(message, error);
         }
-
-        const prestige = user.getPrestige(player);
-        const fkdr = user.getFkdr(player);
 
         // ? Add roles
         try {
+            const prestige = user.getPrestige(player);
+            const fkdr = user.getFkdr(player);
             await user.addRoles([prestige, fkdr]);
         } catch (error) {
-            errorMessage(message, error);
+            Bot.errorMessage(message, error);
         }
 
-        const positions = user.getRoles(['staff']);
-        const nickname = user.getNickname(positions, player);
-
         // ? Set nickname if its different from the current one
-        if (member.nickname !== nickname) {
-            try {
-                await user.setNickname(nickname);
-            } catch (error) {
-                errorMessage(message, error);
-            }
+        try {
+            const positions = user.getRoles(['staff']);
+            const nickname = user.getNickname(positions, player);
+            if (member.nickname !== nickname) await user.setNickname(nickname);
+        } catch (error) {
+            Bot.errorMessage(message, error);
         }
 
         // $ On complete
 
-        successMessage(message, {
-            title: `${usedAlias === 'verify' ? 'Verification' : 'Updating'} complete!`,
-            description: `You can update your stats by running \n\`${data.config.prefix}update ign\``,
+        Bot.successMessage(message, {
+            title: `${usedAlias === 'verify' ? 'Verification' : 'Update'} complete!`,
+            description: `You can update your stats by running \n\`${config.prefix}update ign\``,
         });
     },
 };
-
-function errorMessage(message, error) {
-    if (!content.title) throw new Error(content);
-    message.channel.send({
-        title: error.title,
-        description: error.description,
-        color: error.color ?? '#ff0000',
-        thumbnail: {
-            url: error.thumbnail ?? 'https://cdn.discordapp.com/attachments/798904244379189289/808612710136152114/icon.png',
-        },
-        fields: error.fields ?? [],
-        footer: {
-            text: error.footer ?? `For ${message.member.user.tag}`,
-        },
-    });
-}
-
-function successMessage(message, content) {
-    if (!content.title) throw new Error(content);
-    message.channel.send({
-        title: content.title,
-        description: content.description,
-        color: content.color ?? '#00ff00',
-        thumbnail: {
-            url: content.thumbnail ?? 'https://cdn.discordapp.com/attachments/798904244379189289/808612710136152114/icon.png',
-        },
-        fields: content.fields ?? [],
-        footer: {
-            text: content.footer ?? `For ${message.member.user.tag}`,
-        },
-    });
-}
