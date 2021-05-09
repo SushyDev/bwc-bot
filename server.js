@@ -14,7 +14,7 @@ client.login(process.env.TOKEN);
 // ! Ready = when the bot starts execute this code
 client.on('ready', () => {
     console.log('Ready');
-    client.channels.cache.get('830484766171332639').send(`\`Client ready @ ${new Date().toUTCString()}\``);
+    client.channels.cache.get('830484766171332639').send(`\`Ready @ ${new Date().toUTCString()}\``);
     client.user.setPresence(config.presense);
     setInterval(() => checkForBump(), 300000);
 });
