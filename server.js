@@ -16,7 +16,7 @@ client.on('ready', () => {
     console.log('Ready');
     client.channels.cache.get('830484766171332639').send(`\`Ready @ ${new Date().toUTCString()}\``);
     client.user.setPresence(config.presense);
-    setInterval(() => checkForBump(), 300000);
+    setInterval(() => checkForBump(), 600000);
 });
 
 // ! On message event
