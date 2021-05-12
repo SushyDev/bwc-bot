@@ -7,7 +7,7 @@
     "start": "nodemon .",
     "production": "node ."
   },
-  "author": "Blockplacer12345#0865",
+  "author": "Sushy#6468",
   "license": "GPL-3.0",
   "dependencies": {
     "discord.js": "^12.3.1",

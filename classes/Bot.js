@@ -3,6 +3,7 @@ exports.BotInstance = class {
         this.Discord = require('discord.js');
         this.client = new this.Discord.Client();
         this.config = require('../files/config.json');
+        this.bumped = false;
 
         // ! Setup Moderator
         const {ModeratorInstance} = require('../classes/Moderator');
