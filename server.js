@@ -10,6 +10,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.static('public'));
+app.listen(port, () => console.log(`Website ready`));
 
 // ! Login
 client.login(process.env.TOKEN);
@@ -20,10 +21,9 @@ client.on('ready', () => {
     client.channels.cache.get('830484766171332639').send(`\`Ready @ ${new Date().toUTCString()}\``);
     client.user.setPresence(config.presense);
     setInterval(() => checkForBump(), 600000);
-    app.get('/people', function (req, res) {
-    res.send('hello');
+    app.get('/ping',  (req, res) => {
+      res.send('pinged!')
     })
-    app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 });
 
 // ! On message event
@@ -34,6 +34,9 @@ client.on('message', async (message) => {
     if (message.author.id === '302050872383242240' && message.embeds[0]?.description.includes('Bump done')) {
         client.channels.cache.get('830484766171332639').send('Server was bumped. You will recieve a notification in two hours.');
     }
+
+    const fetch = require('node-fetch')
+    fetch(`http://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/ping`)
 });
 
 // ! Check if bump is ready
