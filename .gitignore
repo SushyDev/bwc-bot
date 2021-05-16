@@ -105,3 +105,4 @@ dist
 
 #extra
 node_modules
+files/config.json

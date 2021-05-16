@@ -1,14 +1,20 @@
 require('dotenv').config();
 
-// ? Classes
 const {BotInstance} = require('./classes/Bot.js');
-
 const Bot = new BotInstance();
-
 const client = Bot.client;
 const config = Bot.config;
 
+const express = require('express');
+const app = express();
+const port = 3000;
 
+app.use(express.static('public'));
+
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
+const url = `http://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+console.log(url);
 
 // ! Login
 client.login(process.env['TOKEN']);
@@ -19,6 +25,10 @@ client.on('ready', () => {
     client.channels.cache.get('830484766171332639').send(`\`Ready @ ${new Date().toUTCString()}\``);
     client.user.setPresence(config.presense);
     setInterval(() => checkForBump(), 600000);
+
+    app.get('/ping', (req, res) => {
+        client.channels.cache.get('830484766171332639').send(`\`Pinged @ ${new Date().toUTCString()}\``);
+    });
 });
 
 // ! On message event

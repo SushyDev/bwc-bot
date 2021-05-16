@@ -32,9 +32,48 @@ module.exports = {
             return;
         }
 
+        try {
+            saveWarning(message, warned, args[1]);
+        } catch (error) {
+            Bot.errorMessage(message, {
+                title: 'Error saving warning',
+                description: error.message,
+            });
+            return;
+        }
+
         Bot.successMessage(message, {
             title: 'Warned',
             description: `Warned ${warned.user.username} for ${args[1]}`,
         });
     },
+};
+
+const saveWarning = (message, warned, reason) => {
+    const path = require('path');
+    const fs = require('fs');
+
+    const contents = fs.readFileSync(path.join(process.cwd(), '/files/warnings.json'), {encoding: 'utf8'});
+
+    const getWarnings = (data) => {
+        try {
+            return JSON.parse(data);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const warnings = getWarnings(contents);
+    if (!warnings[warned.user.id]) warnings[warned.user.id] = [];
+    warnings[warned.user.id].push({
+        reason,
+        timestamp: message.createdTimestamp,
+        by: message.author.id,
+    });
+
+    try {
+        fs.writeFileSync(path.join(process.cwd(), '/files/warnings.json'), JSON.stringify(warnings));
+    } catch (error) {
+        throw error;
+    }
 };
