@@ -8,8 +8,10 @@ const Bot = new BotInstance();
 const client = Bot.client;
 const config = Bot.config;
 
+
+
 // ! Login
-client.login(process.env.TOKEN);
+client.login(process.env['TOKEN']);
 
 // ! Ready = when the bot starts execute this code
 client.on('ready', () => {
