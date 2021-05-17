@@ -27,7 +27,10 @@ exports.BotInstance = class {
     };
 
     errorMessage = (message, error) => {
-        if (!error.title) throw new Error(error);
+        if (!error.title) {
+            console.error(error);
+            return
+        }
 
         message.channel.send({
             embed: {
@@ -46,7 +49,10 @@ exports.BotInstance = class {
     };
 
     successMessage = (message, content) => {
-        if (!content.title) throw new Error(content);
+        if (!content.title) {
+            console.error(content);
+            return
+        }
 
         message.channel.send({
             embed: {

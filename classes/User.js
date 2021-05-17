@@ -100,7 +100,8 @@ exports.User = class {
 
     getNickname = (positions, player) => {
         const getIcon = (level) => (level < 1000 ? '✫' : level < 2000 ? '✪' : '✰');
-        const level = player.achievements.bedwars_level;
+
+        const level = player.achievements.bedwars_level ;
         const name = player.displayname;
         const star = getIcon(level);
 
@@ -110,17 +111,15 @@ exports.User = class {
 
     valid = (player) => {
         // ? Unlinked account
-        if (!player.socialMedia?.links?.DISCORD) {
+        if (!player?.socialMedia?.links?.DISCORD) {
             throw {
                 title: "This account isn't yet linked to a Discord account",
                 description: 'Make sure you have linked your Discord and Minecraft account on the Hypixel website',
             };
         }
 
-        console.log(player.socialMedia?.links?.DISCORD, this.message.author.tag);
-
         // ? Incorrect discord
-        if (player.socialMedia?.links?.DISCORD !== this.message.author.tag) {
+        if (player?.socialMedia?.links?.DISCORD !== this.message.author.tag) {
             throw {
                 title: 'The Discord account was incorrect',
                 description: 'The Discord account linked on the Hypixel website is different from yours',
