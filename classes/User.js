@@ -114,7 +114,7 @@ exports.User = class {
         if (!player?.socialMedia?.links?.DISCORD) {
             throw {
                 title: "This account isn't yet linked to a Discord account",
-                description: 'Make sure you have linked your Discord and Minecraft account on the Hypixel website',
+                description: 'Make sure you have linked your Discord and Minecraft account on the social menu in the hypixel social menu in game',
             };
         }
 
@@ -122,7 +122,7 @@ exports.User = class {
         if (player?.socialMedia?.links?.DISCORD !== this.message.author.tag) {
             throw {
                 title: 'The Discord account was incorrect',
-                description: 'The Discord account linked on the Hypixel website is different from yours',
+                description: 'The Discord account linked on Hypixel is different from yours',
             };
         }
 
