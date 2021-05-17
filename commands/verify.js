@@ -26,7 +26,7 @@ module.exports = {
                 return new User(message, args, config, command);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw error;
+                return;
             }
         };
 
@@ -35,7 +35,7 @@ module.exports = {
                 return await user.fetchMojang(username);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw error;
+                return;
             }
         };
 
@@ -44,7 +44,7 @@ module.exports = {
                 return await user.fetchHypixel(UUID);
             } catch (error) {
                 Bot.errorMessage(message, error);
-                throw error;
+                return;
             }
         };
 
@@ -63,7 +63,7 @@ module.exports = {
             await user.valid(player);
         } catch (error) {
             Bot.errorMessage(message, error);
-            throw error;
+            return;
         }
 
         // ? Remove roles
