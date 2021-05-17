@@ -114,7 +114,7 @@ exports.User = class {
         if (!player?.socialMedia?.links?.DISCORD) {
             throw {
                 title: "This account isn't yet linked to a Discord account",
-                description: 'Make sure you have linked your Discord and Minecraft account on the social menu in the hypixel social menu in game',
+                description: 'Make sure you have linked your Discord and Minecraft account on the social menu in game',
             };
         }
 
