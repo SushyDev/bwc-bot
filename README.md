@@ -6,3 +6,16 @@
 
 U can edit the `/files/config.json` file to change the appearance and prefix of the bot
 
+# Config example
+```
+{
+    "presense": {
+        "status": "online",
+        "activity": {
+            "name": "over you",
+            "type": "WATCHING"
+        }
+    },
+    "prefix": "-!"
+}
+```

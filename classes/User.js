@@ -5,6 +5,7 @@ exports.User = class {
         this.player = args[0];
         this.config = config;
         this.args = args;
+        this.command = command;
     }
 
     getRoles = (types) => {
