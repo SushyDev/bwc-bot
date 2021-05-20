@@ -1,9 +1,9 @@
 exports.User = class {
-    constructor(message, args, data) {
+    constructor(message, args, config, command) {
         this.message = message;
         this.member = message.member;
         this.player = args[0];
-        this.data = data;
+        this.config = config;
         this.args = args;
     }
 
@@ -101,7 +101,7 @@ exports.User = class {
     getNickname = (positions, player) => {
         const getIcon = (level) => (level < 1000 ? '✫' : level < 2000 ? '✪' : '✰');
 
-        const level = player.achievements.bedwars_level ;
+        const level = player.achievements.bedwars_level;
         const name = player.displayname;
         const star = getIcon(level);
 
@@ -187,7 +187,7 @@ exports.User = class {
                 console.log(`Removed ${role.name} from ${member.id} | ${member.user.tag}`);
             } catch (error) {
                 throw {
-                    title: `To remove your old role please run \`${this.data.config.prefix}update ign\` after a few minutes`,
+                    title: `To remove your old role please run \`${this.config.prefix}update ign\` after a few minutes`,
                     description: role.name,
                     fields: [
                         {
@@ -216,7 +216,7 @@ exports.User = class {
             } catch (error) {
                 throw {
                     title: 'Failed to add role',
-                    description: `To get your role please run \`${this.data.config.prefix}update ign\` after a few minutes`,
+                    description: `To get your role please run \`${this.config.prefix}update ign\` after a few minutes`,
                     fields: [
                         {
                             name: 'Role',
@@ -245,7 +245,7 @@ exports.User = class {
         } catch (error) {
             throw {
                 title: 'Failed to set nickname',
-                description: `To get your nickname please run \`${this.data.config.prefix}update ign\` after a few minutes`,
+                description: `To get your nickname please run \`${this.config.prefix}update ign\` after a few minutes`,
                 fields: [
                     {
                         name: 'Nickname',
