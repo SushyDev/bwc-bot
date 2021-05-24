@@ -6,6 +6,8 @@ module.exports = {
     async execute(message, args, config, Bot) {
         const usedAlias = message.content.slice(config.prefix.length).toLowerCase().split(' ')[0];
 
+        const mentions = message.mentions.members.array();
+
         // ? If no username is given
         if (args.length === 0) {
             Bot.errorMessage(message, {
@@ -21,9 +23,30 @@ module.exports = {
             return;
         }
 
-        const getUser = (message, args, config, command) => {
+        const verifyName = mentions.length === 0 ? args[0] : args[1];
+        const verifyMember = mentions.length === 0 ? message.member : mentions[0];
+
+        if (mentions[0]) {
+            const ranks = require('../files/ranks.json');
+            const has = Object.values(ranks.staff).some((rank) => message.member.roles.cache.some((role) => role.id === rank));
+            if (!has) {
+                Bot.errorMessage(message, {
+                    title: 'Only staff can verify other members',
+                    description: 'You have no permission to run the command in this way',
+                    fields: [
+                        {
+                            name: 'Usage:',
+                            value: `${config.prefix}${usedAlias} ign`,
+                        },
+                    ],
+                });
+                return;
+            }
+        }
+
+        const getUser = (message, verify, config, command) => {
             try {
-                return new User(message, args, config, command);
+                return new User(message, verify, config, command);
             } catch (error) {
                 Bot.errorMessage(message, error);
                 return;
@@ -49,10 +72,10 @@ module.exports = {
         };
 
         // ? Instanciate user
-        const user = getUser(message, args, config, this);
+        const user = getUser(message, {player: verifyName, member: verifyMember}, config, this);
 
         // ? Fetch Api data
-        const mojangData = await fetchMojang(args[0]);
+        const mojangData = await fetchMojang(verifyName);
 
         const hypixelData = await fetchHypixel(mojangData.id);
 

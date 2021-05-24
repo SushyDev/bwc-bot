@@ -11,9 +11,30 @@ client.login(process.env.TOKEN);
 // ! Ready = when the bot starts execute this code
 client.on('ready', () => {
     console.log('Ready');
-    client.channels.cache.get('830484766171332639').send(`\`Ready @ ${new Date().toUTCString()}\``);
     client.user.setPresence(config.presense);
     setInterval(() => checkForBump(), 600000);
+
+    const embed = {
+        author: {
+            name: `${client.user.username} is ready`,
+            icon_url: client.user.avatarURL(),
+        },
+        fields: [
+            {
+                name: 'Version',
+                value: require('./package.json').version,
+                inline: true,
+            },
+            {
+                name: 'Prefix',
+                value: config.prefix,
+                inline: true,
+            },
+        ],
+        timestamp: new Date(),
+    };
+    
+    client.channels.cache.get('830484766171332639').send({embed});
 });
 
 // ! On message event
@@ -24,8 +45,6 @@ client.on('message', async (message) => {
     if (message.author.id === '302050872383242240' && message.embeds[0]?.description.includes('Bump done')) {
         client.channels.cache.get('830484766171332639').send('Server was bumped. You will recieve a notification in two hours.');
     }
-
-
 });
 
 // ! Check if bump is ready
@@ -38,7 +57,7 @@ const checkForBump = async () => {
         const found = messages.find((message) => message.author.id === '302050872383242240' && message.embeds[0]?.description.includes('Bump done') && message?.createdTimestamp);
         const ready = found.createdTimestamp + 7200000;
         const now = new Date().getTime();
-        if (now > ready) client.channels.cache.get('830484766171332639').send('@here Server can be bumped again!');
+        if (now > ready) client.channels.cache.get('830484766171332639').send('@here <#779025946317553755> is ready');
     } catch (error) {
         console.error(error);
     }

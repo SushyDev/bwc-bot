@@ -1,10 +1,9 @@
 exports.User = class {
-    constructor(message, args, config, command) {
+    constructor(message, verify, config, command) {
         this.message = message;
-        this.member = message.member;
-        this.player = args[0];
+        this.member = verify.member;
+        this.player = verify.player;
         this.config = config;
-        this.args = args;
         this.command = command;
     }
 
@@ -120,7 +119,7 @@ exports.User = class {
         }
 
         // ? Incorrect discord
-        if (player?.socialMedia?.links?.DISCORD !== this.message.author.tag) {
+        if (player?.socialMedia?.links?.DISCORD !== `${this.member.user.username}#${this.member.user.discriminator}`) {
             throw {
                 title: 'The Discord account was incorrect',
                 description: 'The Discord account linked on Hypixel is different from yours',
