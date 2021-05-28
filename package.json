@@ -4,7 +4,8 @@
   "description": "Management bot for the Bedwars Community Discord server",
   "main": "src/server.ts",
   "scripts": {
-    "start": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
+    "start": "concurrently \"tsc\" \"node dist/server.js\"",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
   "author": "Sushy#6468",
   "license": "GPL-3.0",
