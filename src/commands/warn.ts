@@ -2,7 +2,8 @@ module.exports = {
     name: 'warn',
     aliases: ['warning'],
     description: 'Warning',
-    async execute(message, args, config, Bot) {
+    async execute(message: any, args: any, Bot: any) {
+        const config = Bot.config;
         const guildID = message.guild.id;
         const guild = await Bot.client.guilds.cache.get(guildID);
         const warnedID = args[0].replace(/[^0-9]/g, '');
@@ -49,13 +50,13 @@ module.exports = {
     },
 };
 
-const saveWarning = (message, warned, reason) => {
+const saveWarning = (message: any, warned: any, reason: any) => {
     const path = require('path');
     const fs = require('fs');
 
     const contents = fs.readFileSync(path.join(process.cwd(), '/files/warnings.json'), {encoding: 'utf8'});
 
-    const getWarnings = (data) => {
+    const getWarnings = (data: any) => {
         try {
             return JSON.parse(data);
         } catch (error) {

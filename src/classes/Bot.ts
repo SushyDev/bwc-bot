@@ -1,4 +1,14 @@
+import {Collection, Message, MessageEmbed} from 'discord.js';
+//@ts-ignore
+import {EmbedContent, BotConfig} from '@customTypes/global';
+
 exports.BotInstance = class {
+    Discord: any;
+    client: any;
+    config: BotConfig;
+    bumped: boolean;
+    Moderator: any;
+
     constructor() {
         this.Discord = require('discord.js');
         this.client = new this.Discord.Client();
@@ -14,22 +24,23 @@ exports.BotInstance = class {
     }
 
     #initializeCommands = () => {
+        const path = require('path');
         const fs = require('fs');
         const client = this.client;
         const Discord = this.Discord;
 
         client.commands = new Discord.Collection();
-        const commands = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
+        const commands: Collection<object, object> = fs.readdirSync(path.resolve(__dirname, '../commands')).filter((file: any) => file.endsWith('.js'));
         for (const file of commands) {
             const command = require(`../commands/${file}`);
             client.commands.set(command.name, command);
         }
     };
 
-    errorMessage = (message, error) => {
+    errorMessage = (message: Message, error: any): void => {
         if (!error.title) {
             console.error(error);
-            return
+            return;
         }
 
         message.channel.send({
@@ -42,16 +53,16 @@ exports.BotInstance = class {
                 },
                 fields: error.fields ?? [],
                 footer: {
-                    text: error.footer ?? `For ${message.member.user.tag}`,
+                    text: error.footer ?? `For ${message.member!.user.tag}`,
                 },
-            },
+            } as MessageEmbed,
         });
     };
 
-    successMessage = (message, content) => {
+    successMessage = (message: Message, content: EmbedContent): void => {
         if (!content.title) {
             console.error(content);
-            return
+            return;
         }
 
         message.channel.send({
@@ -64,26 +75,26 @@ exports.BotInstance = class {
                 },
                 fields: content.fields ?? [],
                 footer: {
-                    text: content.footer ?? `For ${message.member.user.tag}`,
+                    text: content.footer ?? `For ${message.member!.user.tag}`,
                 },
-            },
+            } as MessageEmbed,
         });
     };
 
     // ! Runs the command according to what is typed
-    runCommand = (message) => {
+    runCommand = (message: Message) => {
         const client = this.client;
         const config = this.config;
 
         // ? Format message and split
-        const commandMessage = message.content.slice(config.prefix.length).toLowerCase().split(' ');
+        const commandMessage: string[] = message.content.slice(config.prefix.length).toLowerCase().split(' ');
         // ? First split is actual command
-        const commandName = commandMessage[0];
+        const commandName: string = commandMessage[0];
         // ? Get command
-        const command = client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+        const command: {execute: Function} = client.commands.get(commandName) || client.commands.find((cmd: {aliases: string[]}) => cmd.aliases && cmd.aliases.includes(commandName));
 
         // ? Arguements array is created
-        let args = [];
+        let args: string[] = [];
 
         // ? If there is arguements then add all to the messageArgs array
         if (commandMessage.length > 1) for (let arg = 1; arg < commandMessage.length; arg++) args.push(commandMessage[arg]);
@@ -92,6 +103,6 @@ exports.BotInstance = class {
         if (message.author.bot || !command) return;
 
         console.log(`[Handler] Recieved ${commandName} ${args.length === 0 ? 'without arguements' : 'command with arguements:'} ${args}`);
-        command.execute(message, args, config, this);
+        command.execute(message, args, this);
     };
 };

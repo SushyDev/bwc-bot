@@ -1,10 +1,16 @@
+import {Message} from 'discord.js';
+//@ts-ignore
+import {BotConfig} from '@customTypes/global';
+
 module.exports = {
     name: 'help',
     description: 'List all commands',
-    execute(message, args, config, Bot) {
+    execute(message: Message, args: any, Bot: any) {
+        const config: BotConfig = Bot.config;
+
         // ? Format the commands
-        const getCommandList = (commands) => {
-            return commands.map((x) => {
+        const getCommandList = (commands: any) => {
+            return commands.map((x: any) => {
                 return {
                     name: `${x.name[0].toUpperCase()}${x.name.slice(1)}`,
                     value: `${x.description}\nUsage: \`${config.prefix + x.name}\`\n${x.aliases ? `Aliase(s): \`${x.aliases}\`` : ''}`,

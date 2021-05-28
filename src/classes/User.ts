@@ -1,5 +1,14 @@
+import {GuildMember, Message} from 'discord.js';
+//@ts-ignore
+import {BotConfig} from '@customTypes/global';
+
 exports.User = class {
-    constructor(message, verify, config, command) {
+    message: Message;
+    member: GuildMember;
+    player: any;
+    config: BotConfig;
+    command: any;
+    constructor(message: any, verify: any, config: any, command: any) {
         this.message = message;
         this.member = verify.member;
         this.player = verify.player;
@@ -7,14 +16,14 @@ exports.User = class {
         this.command = command;
     }
 
-    getRoles = (types) => {
+    getRoles = (types: string[]) => {
         if (!types) throw 'No role types arguement defined';
 
         const ranks = require('../files/ranks.json');
         const member = this.member;
 
-        const returnRoleID = (list, type) => {
-            return list.map((item, key) => {
+        const returnRoleID = (list: any, type: any) => {
+            return list.map((item: any, key: any) => {
                 const name = Object.keys(ranks[type])[key];
                 const id = type === 'prestige' ? list[key].id : list[key];
                 if (!member.roles.cache.has(id)) return;
@@ -23,23 +32,23 @@ exports.User = class {
             });
         };
 
-        const buildArray = (types) => {
+        const buildArray = (types: string[]) => {
             return types
-                .map((type) => {
-                    const exists = Object.keys(ranks).find((name) => name === type);
+                .map((type: string) => {
+                    const exists: boolean = Object.keys(ranks).some((name: string) => name === type)!;
                     if (!exists) return console.error(`Type can only be: ${Object.keys(ranks)}`);
 
                     const list = Object.values(ranks[type]);
                     return returnRoleID(list, type);
                 })
                 .flat()
-                .filter((i) => i);
+                .filter((i: string) => i);
         };
 
         return buildArray(types);
     };
 
-    getPrestige = (player) => {
+    getPrestige = (player: any) => {
         if (!player) throw 'prestigeMatching requires a player arguement';
 
         const ranks = require('../files/ranks.json');
@@ -53,12 +62,12 @@ exports.User = class {
         const highest = Math.max.apply(null, levels);
 
         const name = Object.keys(list).find((key) => list[key].level === highest);
-        const id = ranks['prestige'][name].id;
+        const id = ranks['prestige'][name!].id;
 
         return {name, id};
     };
 
-    getFkdr = (player) => {
+    getFkdr = (player: any) => {
         if (!player) return console.error('fkdrMatching requires a player arguement');
 
         const ranks = require('../files/ranks.json');
@@ -98,8 +107,8 @@ exports.User = class {
         return getRoleInfo();
     };
 
-    getNickname = (positions, player) => {
-        const getIcon = (level) => (level < 1000 ? '✫' : level < 2000 ? '✪' : '✰');
+    getNickname = (positions: any, player: any) => {
+        const getIcon = (level: any) => (level < 1000 ? '✫' : level < 2000 ? '✪' : '✰');
 
         const level = player.achievements.bedwars_level;
         const name = player.displayname;
@@ -109,7 +118,7 @@ exports.User = class {
         return `[${position}] ${name}`;
     };
 
-    valid = (player) => {
+    valid = (player: any) => {
         // ? Unlinked account
         if (!player?.socialMedia?.links?.DISCORD) {
             throw {
@@ -135,7 +144,7 @@ exports.User = class {
         }
     };
 
-    fetchMojang = async (username) => {
+    fetchMojang = async (username: any) => {
         const fetch = require('node-fetch');
 
         try {
@@ -155,13 +164,13 @@ exports.User = class {
         }
     };
 
-    fetchHypixel = async (uuid) => {
+    fetchHypixel = async (uuid: any) => {
         const fetch = require('node-fetch');
 
         try {
             const hypixelApi = await fetch(`http://api.hypixel.net/player?key=${process.env.HYPIXEL_API_KEY}&uuid=${uuid}`);
             const hypixelData = await hypixelApi.json();
-            if (!hypixelData.success) throwhypixelData.cause;
+            if (!hypixelData.success) throw hypixelData.cause;
             return hypixelData;
         } catch (error) {
             throw {
@@ -177,7 +186,7 @@ exports.User = class {
         }
     };
 
-    removeRoles = async (roles) => {
+    removeRoles = async (roles: any) => {
         const member = this.member;
         for (const key in roles) {
             const role = roles[key];
@@ -205,7 +214,7 @@ exports.User = class {
         return;
     };
 
-    addRoles = async (roles) => {
+    addRoles = async (roles: any) => {
         const member = this.member;
         for (const key in roles) {
             const role = roles[key];
@@ -237,7 +246,7 @@ exports.User = class {
         return;
     };
 
-    setNickname = async (nickname) => {
+    setNickname = async (nickname: any) => {
         const member = this.member;
         try {
             await member.setNickname(nickname);

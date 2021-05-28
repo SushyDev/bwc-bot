@@ -1,0 +1,10 @@
+{
+    "presense": {
+        "status": "online",
+        "activity": {
+            "name": "over you",
+            "type": "WATCHING"
+        }
+    },
+    "prefix": "-!"
+}

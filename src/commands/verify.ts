@@ -3,7 +3,9 @@ module.exports = {
     name: 'verify',
     aliases: ['update'],
     description: 'Gives FKDR and Prestige roles based on your Hypixel stats',
-    async execute(message, args, config, Bot) {
+    async execute(message: any, args: any, Bot: any) {
+        const config = Bot.config;
+
         const usedAlias = message.content.slice(config.prefix.length).toLowerCase().split(' ')[0];
 
         const mentions = message.mentions.members.array();
@@ -28,7 +30,7 @@ module.exports = {
 
         if (mentions[0]) {
             const ranks = require('../files/ranks.json');
-            const has = Object.values(ranks.staff).some((rank) => message.member.roles.cache.some((role) => role.id === rank));
+            const has = Object.values(ranks.staff).some((rank) => message.member.roles.cache.some((role: any) => role.id === rank));
             if (!has) {
                 Bot.errorMessage(message, {
                     title: 'Only staff can verify other members',
@@ -44,7 +46,7 @@ module.exports = {
             }
         }
 
-        const getUser = (message, verify, config, command) => {
+        const getUser = (message: any, verify: any, config: any, command: any) => {
             try {
                 return new User(message, verify, config, command);
             } catch (error) {
@@ -53,7 +55,7 @@ module.exports = {
             }
         };
 
-        const fetchMojang = async (username) => {
+        const fetchMojang = async (username: any) => {
             try {
                 return await user.fetchMojang(username);
             } catch (error) {
@@ -62,7 +64,7 @@ module.exports = {
             }
         };
 
-        const fetchHypixel = async (UUID) => {
+        const fetchHypixel = async (UUID: any) => {
             try {
                 return await user.fetchHypixel(UUID);
             } catch (error) {
